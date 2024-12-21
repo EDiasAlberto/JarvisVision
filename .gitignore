@@ -8,3 +8,4 @@ venv
 *.jpeg
 __pycache__
 
+text.mp3
