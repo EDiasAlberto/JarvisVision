@@ -46,4 +46,5 @@ if __name__=="__main__":
     client.askGPT("Hey, what is your purpose?")
     client.askGPT("Cool, how would you write a HTTP request in Python?")
     client.askGPT("What was my first message to you?")
+    client.askGPT("Please make a list of all the items on my desk")
 

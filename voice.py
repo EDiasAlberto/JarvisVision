@@ -35,7 +35,7 @@ class Voice:
     def stt(self):
         audio = self.getMicAudio()
         try:
-            print(f"OpenAI Whisper API thinks you said{self.audioRecog.recognize_openai(audio)}")
+            print(f"OpenAI Whisper API thinks you said {self.audioRecog.recognize_openai(audio)}")
         except sr.RequestError as e:
             print("BIG ERROR")
 
