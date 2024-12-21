@@ -31,6 +31,9 @@ class Computer:
         with open(path, "w") as openFile:
             openFile.write(contents)
 
+    def copy(self, text):
+        xerox.copy(text);
+
     def getClipboardContents(self):
         contents = xerox.paste()
         if not contents:
