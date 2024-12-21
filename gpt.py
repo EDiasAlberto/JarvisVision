@@ -4,16 +4,18 @@ from dotenv import load_dotenv
 from os import getenv
 from base64 import b64encode
 
-setupContext = [
-    "You are a helpful AI assistant. Refer to the user as Sir. Your purpose is to aid in project guidance or programming help.",
-    "If a request that I make to you requires an image (for example, I ask you about something on my desk) then respond with just 'IMAGE_REQUIRED'. The subsequent message will then contain the relevant image.",
-    #"If a request that I make to you requires some code (for example I ask you how to program a snippet) then respond with just 'CODE_REQUIRED'. The subsequent message will then contain the relevant code."
-]
 
 class GPT:
-    def __init__(self, api_key):
+    def __init__(self, api_key, IMG_REQ_KEYSTRING):
         self.messages = []
         self.client = OpenAI(api_key=api_key) 
+
+        setupContext = [
+            "You are a helpful AI assistant. Refer to the user as Sir. Your purpose is to aid in project guidance or programming help.",
+            f"If a request that I make to you requires an image (for example, I ask you about something on my desk) then respond with just '{IMG_REQ_KEYSTRING}'. The subsequent message will then contain the relevant image.",
+            #"If a request that I make to you requires some code (for example I ask you how to program a snippet) then respond with just 'CODE_REQUIRED'. The subsequent message will then contain the relevant code."
+        ]
+
         for input in setupContext:
             self.createMessage(input, "system")
         self.maxTokens = 2000
