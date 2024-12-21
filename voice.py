@@ -1,17 +1,16 @@
-from gtts import gTTS 
 from os import system
 from dotenv import load_dotenv
-import speech_recognition as sr 
-
+import speech_recognition as sr
 
 class Voice:
     
-    def __init__(self):
+    def __init__(self, openAIClient):
         self.lang = "en"
         self.slow = False
         self.outputFile = "text.mp3"
         self.audioRecog = sr.Recognizer()
-        self.micIndex = 1
+        self.micIndex = 2
+        self.client = openAIClient
 
     def list_microphones(self):
         mics = sr.Microphone.list_microphone_names()
@@ -28,8 +27,12 @@ class Voice:
 
 
     def tts(self, string):
-        ttsObj = gTTS(text=string, lang=self.lang, slow=self.slow)
-        ttsObj.save(self.outputFile)
+        response = self.client.audio.speech.create(
+            model="tts-1",
+            voice="alloy",
+            input=string
+        )
+        response.stream_to_file(self.outputFile)
         system(f"afplay {self.outputFile}")
 
     def stt(self):
@@ -45,6 +48,7 @@ class Voice:
 if __name__=="__main__":
     load_dotenv()
     client = Voice()
+    client.list_microphones()
     client.tts("This should be read out loud!")
 
     client.stt()

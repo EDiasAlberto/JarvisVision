@@ -6,9 +6,9 @@ from base64 import b64encode
 
 
 class GPT:
-    def __init__(self, api_key, IMG_REQ_KEYSTRING):
+    def __init__(self, client, IMG_REQ_KEYSTRING):
         self.messages = []
-        self.client = OpenAI(api_key=api_key) 
+        self.client = client
 
         setupContext = [
             "You are a helpful AI assistant. Refer to the user as Sir. Your purpose is to aid in project guidance or programming help.",

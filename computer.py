@@ -13,7 +13,6 @@ class Computer:
 
     def __init__(self):
         self.cam = VideoCapture(0)
-        namedWindow("outputFrame")
 
     def testCamera(self):
         s, img = self.cam.read()
@@ -25,8 +24,8 @@ class Computer:
         s, img = self.cam.read()
         if s:
             s, buffer = imencode(".jpg", img)
-            b64 = b64encode(buffer)
-            return img
+            b64 = b64encode(buffer).decode("utf-8")
+            return b64
 
     def saveTextFile(self, contents, path):
         with open(path, "w") as openFile:
