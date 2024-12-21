@@ -1,4 +1,4 @@
-from cv2 import VideoCapture, imshow, imwrite, namedWindow, waitKey, imencode
+from cv2 import VideoCapture, imshow, imwrite, imencode
 from base64 import b64encode
 from time import sleep
 import xerox
