@@ -34,7 +34,6 @@ class Jarvis:
         #get mic audio
         #send mic audio to gpt
         #handle response
-        # TODO: Implement code clipboard handling
 
         recogText = self.voice.stt()
         print("Asking GPT")
@@ -43,7 +42,7 @@ class Jarvis:
         print("Handling Response")
         if response.lower() == IMG_REQ_KEYSTRING.lower():
             self.handleImageRequirement()
-        if CODE_SEG_KEYSTRING.lower() in response.lower():
+        elif CODE_SEG_KEYSTRING.lower() in response.lower():
             self.handleCodeSegment(response)
         else:
             self.voice.tts(response)
