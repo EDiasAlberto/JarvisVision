@@ -11,12 +11,13 @@ END_CONV_KEYSTRING = "END_CONV"
 
 class Jarvis:
 
-    def __init__(self):
+    def __init__(self, isSilent):
         load_dotenv()
         self.AIClient = OpenAI(api_key=getenv("OPENAI_API_KEY"))
         self.voice = Voice(self.AIClient)
         self.pc = Computer()
         self.gpt = GPT(self.AIClient, IMG_REQ_KEYSTRING, CODE_SEG_KEYSTRING, END_CONV_KEYSTRING)
+        self.silentMode = isSilent
 
 
     def handleImageRequirement(self):
@@ -35,8 +36,10 @@ class Jarvis:
         #get mic audio
         #send mic audio to gpt
         #handle response
-
-        recogText = self.voice.stt()
+        if self.silentMode:
+            recogText = input("What would you like to ask?")
+        else:
+            recogText = self.voice.stt()
         print("Asking GPT")
         self.voice.tts("Hang on I'm thinking...")
         response = self.gpt.askGPT(recogText)
@@ -54,7 +57,10 @@ class Jarvis:
         return True
 
 if __name__=="__main__":
-    assistant = Jarvis()
+    
+    isSilent = input("Would you like to run without Speech Recog? (y/n)\t").lower() == "yes"
+    
+    assistant = Jarvis(isSilent)
 
     continueLoop = assistant.mainLoop()
     while continueLoop:
