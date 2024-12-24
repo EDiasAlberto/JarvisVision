@@ -7,6 +7,7 @@ from openai import OpenAI
 
 IMG_REQ_KEYSTRING = "IMAGE_REQUIRED"
 CODE_SEG_KEYSTRING = "CODE_SEGMENT"
+END_CONV_KEYSTRING = "END_CONV"
 
 class Jarvis:
 
@@ -15,7 +16,7 @@ class Jarvis:
         self.AIClient = OpenAI(api_key=getenv("OPENAI_API_KEY"))
         self.voice = Voice(self.AIClient)
         self.pc = Computer()
-        self.gpt = GPT(self.AIClient, IMG_REQ_KEYSTRING, CODE_SEG_KEYSTRING)
+        self.gpt = GPT(self.AIClient, IMG_REQ_KEYSTRING, CODE_SEG_KEYSTRING, END_CONV_KEYSTRING)
 
 
     def handleImageRequirement(self):
@@ -44,11 +45,18 @@ class Jarvis:
             self.handleImageRequirement()
         elif CODE_SEG_KEYSTRING.lower() in response.lower():
             self.handleCodeSegment(response)
+        elif END_CONV_KEYSTRING.lower() in response.lower():
+            self.voice.tts(response.split(END_CONV_KEYSTRING)[1])
+            return False
         else:
             self.voice.tts(response)
         print("Done with request 1!")
+        return True
 
 if __name__=="__main__":
     assistant = Jarvis()
 
-    assistant.mainLoop()
+    continueLoop = assistant.mainLoop()
+    while continueLoop:
+        continueLoop = assistant.mainLoop()
+

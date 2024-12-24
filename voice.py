@@ -1,5 +1,6 @@
-from os import system
+from os import system, getenv
 from dotenv import load_dotenv
+from openai import OpenAI
 import speech_recognition as sr
 
 class Voice:
@@ -9,7 +10,7 @@ class Voice:
         self.slow = False
         self.outputFile = "text.mp3"
         self.audioRecog = sr.Recognizer()
-        self.micIndex = 2
+        self.micIndex = 1
         self.client = openAIClient
 
     def list_microphones(self):
@@ -29,7 +30,7 @@ class Voice:
     def tts(self, string):
         response = self.client.audio.speech.create(
             model="tts-1",
-            voice="alloy",
+            voice="echo",
             input=string
         )
         response.stream_to_file(self.outputFile)
@@ -47,7 +48,8 @@ class Voice:
 
 if __name__=="__main__":
     load_dotenv()
-    client = Voice()
+    AIClient = OpenAI(api_key=getenv("OPENAI_API_KEY"))
+    client = Voice(AIClient)
     client.list_microphones()
     client.tts("This should be read out loud!")
 
