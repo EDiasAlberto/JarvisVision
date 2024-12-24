@@ -4,6 +4,8 @@ from voice import Voice
 from gpt import GPT 
 from computer import Computer 
 from openai import OpenAI
+from webserver import SimpleHTTPRequestHandler
+from http.server import BaseHTTPRequestHandler, HTTPServer
 
 IMG_REQ_KEYSTRING = "IMAGE_REQUIRED"
 SCREEN_REQ_KEYSTRING = "SCREENSHOT_REQUIRED"
@@ -70,7 +72,15 @@ if __name__=="__main__":
     
     assistant = Jarvis(isSilent)
 
-    continueLoop = assistant.mainLoop()
-    while continueLoop:
-        continueLoop = assistant.mainLoop()
+
+# Define the main function to start the server
+    server_address = ('', 8080)
+    # Use a lambda to pass custom attributes to the handler
+    httpd = HTTPServer(
+        server_address, 
+        lambda *args, **kwargs: SimpleHTTPRequestHandler(*args, jarvis=assistant, **kwargs)
+    )
+    print("Server is running on port 8080...")
+    httpd.serve_forever()
+
 
