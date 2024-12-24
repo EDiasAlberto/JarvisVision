@@ -6,6 +6,7 @@ from computer import Computer
 from openai import OpenAI
 
 IMG_REQ_KEYSTRING = "IMAGE_REQUIRED"
+SCREEN_REQ_KEYSTRING = "SCREENSHOT_REQUIRED"
 CODE_SEG_KEYSTRING = "CODE_SEGMENT"
 END_CONV_KEYSTRING = "END_CONV"
 
@@ -16,12 +17,17 @@ class Jarvis:
         self.AIClient = OpenAI(api_key=getenv("OPENAI_API_KEY"))
         self.voice = Voice(self.AIClient)
         self.pc = Computer()
-        self.gpt = GPT(self.AIClient, IMG_REQ_KEYSTRING, CODE_SEG_KEYSTRING, END_CONV_KEYSTRING)
+        self.gpt = GPT(self.AIClient, IMG_REQ_KEYSTRING, CODE_SEG_KEYSTRING, SCREEN_REQ_KEYSTRING, END_CONV_KEYSTRING)
         self.silentMode = isSilent
 
 
     def handleImageRequirement(self):
         image = self.pc.takePhoto()
+        res = self.gpt.sendImg(image)
+        self.voice.tts(res)
+
+    def handleScreenRequirement(self):
+        image = self.pc.takeScreenshot()
         res = self.gpt.sendImg(image)
         self.voice.tts(res)
 
@@ -46,6 +52,8 @@ class Jarvis:
         print("Handling Response")
         if response.lower() == IMG_REQ_KEYSTRING.lower():
             self.handleImageRequirement()
+        elif response.lower() == SCREEN_REQ_KEYSTRING.lower():
+            self.handleScreenRequirement()
         elif CODE_SEG_KEYSTRING.lower() in response.lower():
             self.handleCodeSegment(response)
         elif END_CONV_KEYSTRING.lower() in response.lower():
@@ -58,7 +66,7 @@ class Jarvis:
 
 if __name__=="__main__":
     
-    isSilent = input("Would you like to run without Speech Recog? (y/n)\t").lower() == "yes"
+    isSilent = input("Would you like to run without Speech Recog? (y/n)\t").lower() == "y"
     
     assistant = Jarvis(isSilent)
 

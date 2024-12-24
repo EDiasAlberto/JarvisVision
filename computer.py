@@ -1,7 +1,8 @@
 from cv2 import VideoCapture, imshow, imwrite, imencode
+from PIL import ImageGrab
 from base64 import b64encode
 from time import sleep
-import xerox
+import xerox, io
 
 #handles any interactions with the computer
 # for now this includes the following:
@@ -26,6 +27,15 @@ class Computer:
             s, buffer = imencode(".jpg", img)
             b64 = b64encode(buffer).decode("utf-8")
             return b64
+
+    def takeScreenshot(self):
+        screenshot = ImageGrab.grab()
+        buffer = io.BytesIO()
+        screenshot = screenshot.convert("RGB")
+        screenshot.save(buffer, format="JPEG")
+        buffer.seek(0)
+        b64 = b64encode(buffer.getvalue()).decode("utf-8")
+        return b64
 
     def saveTextFile(self, contents, path):
         with open(path, "w") as openFile:

@@ -6,7 +6,7 @@ from base64 import b64encode
 
 
 class GPT:
-    def __init__(self, client, IMG_REQ_KEYSTRING, CODE_SEG_KEYSTRING, END_CONV_KEYSTRING):
+    def __init__(self, client, IMG_REQ_KEYSTRING, CODE_SEG_KEYSTRING, SCREEN_REQ_KEYSTRING, END_CONV_KEYSTRING):
         self.messages = []
         self.client = client
         self.gptModel = "gpt-4o-mini"
@@ -15,7 +15,8 @@ class GPT:
             "Your name is Ethan. You are a helpful AI assistant. Your purpose is to aid in project guidance or programming help.",
             f"If a request that I make to you requires an image (for example, I ask you about something on my desk) then respond with just '{IMG_REQ_KEYSTRING}'. The subsequent message will then contain the relevant image.",
             f"If a request that I make to you involves responding with some code, then please put the entirety of the snippet of code at the end of the message. Please prefix the code snippet with '{CODE_SEG_KEYSTRING}'. The formatting should be such that you have a description of the code and/or how it works, followed by a notice that the code has been copied to my clipboard, followed by a line that says '{CODE_SEG_KEYSTRING}' and then the code itself, and then the end of the message. There should be no actual text following the code segment.",
-            f"If I say that I am done or say goodbye in some way, simply return a message with {END_CONV_KEYSTRING} followed by a goodbye message. There should be no text before {END_CONV_KEYSTRING}."
+            f"If I say that I am done or say goodbye in some way, simply return a message with {END_CONV_KEYSTRING} followed by a goodbye message. There should be no text before {END_CONV_KEYSTRING}.",
+            f"If I make a request that references something on my screen, and you need to see it, then respond with just '{SCREEN_REQ_KEYSTRING}'. The subsequent message will then contain the relevant screenshot."
         ]
 
         for input in setupContext:
