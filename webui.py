@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request
+import markdown
 
 class WebApp:
     def __init__(self, assistant=None):
@@ -9,14 +10,18 @@ class WebApp:
     def _setup_routes(self):
         @self.app.route("/", methods=["GET", "POST"])
         def index():
-            result = None
+            user_input = None
+            response = None
             if request.method == "POST":
                 user_input = request.form.get("user_input")
                 if self.assistant:
-                    self.assistant.mainLoop(user_input)
+                    response = self.assistant.mainLoop(user_input)
+
                 print("Received input:", user_input)
-                result = f"You entered: {user_input}"
-            return render_template("index.html", result=result)
+                user_input = markdown.markdown(user_input)
+                if response:
+                    response = markdown.markdown(response)
+            return render_template("index.html", user_input=user_input, response=response)
 
     def run(self, host="0.0.0.0", port=4200):
         self.app.run(host=host, port=port, debug=True)

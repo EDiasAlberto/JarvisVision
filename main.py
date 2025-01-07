@@ -70,7 +70,7 @@ class Jarvis:
             self.voice.tts(response)
         self.reqCounter+=1
         print(f"Done with request {self.reqCounter}!")
-        return True
+        return response
 
 if __name__=="__main__":
     

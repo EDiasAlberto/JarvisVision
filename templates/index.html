@@ -1,10 +1,37 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flask Web App</title>
+    <style>
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 50%;
+            margin: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        .bubble {
+            padding: 10px;
+            border-radius: 10px;
+            margin: 5px 0;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        .user-bubble {
+            align-self: flex-end;
+            background-color: #d1e7dd;
+        }
+        .response-bubble {
+            align-self: flex-start;
+            background-color: #f8d7da;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
     <h1>Simple Flask App</h1>
@@ -13,5 +40,30 @@
         <input type="text" id="user_input" name="user_input">
         <button type="submit">Submit</button>
     </form>
+    <div class="chat-container">
+        {% if user_input %}
+            <div class="bubble user-bubble">
+                <div id="userMarkdown">{{ user_input }}</div>
+            </div>
+        {% endif %}
+        {% if response %}
+            <div class="bubble response-bubble">
+                <div id="responseMarkdown">{{ response }}</div>
+            </div>
+        {% endif %}
+    </div>
+    <script>
+        // Render the user input as Markdown
+        const userMarkdownEl = document.getElementById('userMarkdown');
+        if (userMarkdownEl) {
+            userMarkdownEl.innerHTML = marked.parse(userMarkdownEl.innerText);
+        }
+
+        // Render the response as Markdown
+        const responseMarkdownEl = document.getElementById('responseMarkdown');
+        if (responseMarkdownEl) {
+            responseMarkdownEl.innerHTML = marked.parse(responseMarkdownEl.innerText);
+        }
+    </script>
 </body>
 </html>
