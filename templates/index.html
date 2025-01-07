@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jarvis WebApp</title>
+    <style>
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 50%;
+            margin: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        .bubble {
+            padding: 10px;
+            border-radius: 10px;
+            margin: 5px 0;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        .user-bubble {
+            align-self: flex-end;
+            background-color: #d1e7dd;
+        }
+        .response-bubble {
+            align-self: flex-start;
+            background-color: #f8d7da;
+        }
+        .image-content {
+            margin-top: 10px;
+            max-width: 100%;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <h1>Jarvis WebApp</h1>
+    <div class="chat-container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="bubble {{ 'user-bubble' if message.role == 'user' else 'response-bubble' }}">
+                    {% if message.type == 'plaintext' %}
+                        <div class="markdown-content" data-content="{{ message.content | e }}"></div>
+                    {% elif message.type == 'complex' %}
+                        {% for item in message.content %}
+                            {% if item.type == 'text' %}
+                                <div class="markdown-content" data-content="{{ item.text | e }}"></div>
+                            {% elif item.type == 'image_url' %}
+                                <img class="image-content" src="{{ item.image_url.url }}" alt="Image">
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% endif %}
+        <form method="POST">
+            <label for="user_input">Enter something:</label>
+            <input type="text" id="user_input" name="user_input">
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    <script>
+        // Render all markdown content dynamically
+        document.querySelectorAll('.markdown-content').forEach((el) => {
+            el.innerHTML = marked.parse(el.dataset.content);
+        });
+    </script>
+</body>
+</html>
