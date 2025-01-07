@@ -63,7 +63,6 @@ class Jarvis:
         if IMG_REQ_KEYSTRING.lower() in response.lower():
             self.handleImageRequirement()
         elif response.lower() == SCREEN_REQ_KEYSTRING.lower():
-            print("SCREENSHOT MEME MOMENT")
             self.handleScreenRequirement()
         elif CODE_SEG_KEYSTRING.lower() in response.lower():
             self.handleCodeSegment(response)
