@@ -16,6 +16,7 @@ class Jarvis:
 
     def __init__(self, isSilent):
         load_dotenv()
+        self.reqCounter = 0
         self.AIClient = OpenAI(api_key=getenv("OPENAI_API_KEY"))
         self.voice = Voice(self.AIClient)
         self.pc = Computer()
@@ -52,7 +53,7 @@ class Jarvis:
         self.voice.tts("Hang on I'm thinking...")
         response = self.gpt.askGPT(recogText)
         print("Handling Response")
-        if response.lower() == IMG_REQ_KEYSTRING.lower():
+        if IMG_REQ_KEYSTRING.lower() in response.lower():
             self.handleImageRequirement()
         elif response.lower() == SCREEN_REQ_KEYSTRING.lower():
             self.handleScreenRequirement()
@@ -63,24 +64,31 @@ class Jarvis:
             return False
         else:
             self.voice.tts(response)
-        print("Done with request 1!")
+        self.reqCounter+=1
+        print(f"Done with request {self.reqCounter}!")
         return True
 
 if __name__=="__main__":
     
     isSilent = input("Would you like to run without Speech Recog? (y/n)\t").lower() == "y"
-    
+    isListening = input("Would you like to run without a hardware trigger? (y/n)\t").lower() == "y"
+
     assistant = Jarvis(isSilent)
 
 
-# Define the main function to start the server
-    server_address = ('', 8080)
-    # Use a lambda to pass custom attributes to the handler
-    httpd = HTTPServer(
-        server_address, 
-        lambda *args, **kwargs: SimpleHTTPRequestHandler(*args, jarvis=assistant, **kwargs)
-    )
-    print("Server is running on port 8080...")
-    httpd.serve_forever()
+    if (isListening):
+        #run the mainloop
+        while True:
+            assistant.mainLoop()
+    else:
+        # Define the main function to start the server
+        server_address = ('', 8080)
+        # Use a lambda to pass custom attributes to the handler
+        httpd = HTTPServer(
+            server_address, 
+            lambda *args, **kwargs: SimpleHTTPRequestHandler(*args, jarvis=assistant, **kwargs)
+        )
+        print("Server is running on port 8080...")
+        httpd.serve_forever()
 
 
