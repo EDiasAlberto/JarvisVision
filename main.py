@@ -5,6 +5,7 @@ from gpt import GPT
 from computer import Computer 
 from openai import OpenAI
 from webserver import SimpleHTTPRequestHandler
+from webui import WebApp
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 IMG_REQ_KEYSTRING = "IMAGE_REQUIRED"
@@ -75,23 +76,29 @@ if __name__=="__main__":
     
     isSilent = input("Would you like to run without Speech Recog? (y/n)\t").lower() == "y"
     isListening = input("Would you like to run without a hardware trigger? (y/n)\t").lower() == "y"
+    if isListening and isSilent:
+        webInput = (isListening and isSilent) and input("Would you like to use the website-based input (y/n)\t").lower() == "y"
 
     assistant = Jarvis(isSilent)
 
-
-    if (isListening):
-        #run the mainloop
-        while True:
-            assistant.mainLoop("Please describe what an apple looks like")
+    if webInput:
+        webapp = WebApp(assistant)
+        webapp.run()
     else:
-        # Define the main function to start the server
-        server_address = ('', 8080)
-        # Use a lambda to pass custom attributes to the handler
-        httpd = HTTPServer(
-            server_address, 
-            lambda *args, **kwargs: SimpleHTTPRequestHandler(*args, jarvis=assistant, **kwargs)
-        )
-        print("Server is running on port 8080...")
-        httpd.serve_forever()
+
+        if (isListening):
+            #run the mainloop
+            while True:
+                assistant.mainLoop()
+        else:
+            # Define the main function to start the server
+            server_address = ('', 8080)
+            # Use a lambda to pass custom attributes to the handler
+            httpd = HTTPServer(
+                server_address, 
+                lambda *args, **kwargs: SimpleHTTPRequestHandler(*args, jarvis=assistant, **kwargs)
+            )
+            print("Server is running on port 8080...")
+            httpd.serve_forever()
 
 
