@@ -41,14 +41,17 @@ class Jarvis:
         self.pc.copy(code)
         self.voice.tts(explanation)
 
-    def mainLoop(self):
+    def mainLoop(self, inputTxt=None):
         #get mic audio
         #send mic audio to gpt
         #handle response
-        if self.silentMode:
-            recogText = input("What would you like to ask?")
+        if inputTxt is None:
+            if self.silentMode:
+                recogText = input("What would you like to ask?")
+            else:
+                recogText = self.voice.stt()
         else:
-            recogText = self.voice.stt()
+            recogText = inputTxt
         print("Asking GPT")
         self.voice.tts("Hang on I'm thinking...")
         response = self.gpt.askGPT(recogText)
@@ -79,7 +82,7 @@ if __name__=="__main__":
     if (isListening):
         #run the mainloop
         while True:
-            assistant.mainLoop()
+            assistant.mainLoop("Please describe what an apple looks like")
     else:
         # Define the main function to start the server
         server_address = ('', 8080)
