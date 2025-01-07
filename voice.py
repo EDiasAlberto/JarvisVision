@@ -12,6 +12,13 @@ class Voice:
         self.audioRecog = sr.Recognizer()
         self.micIndex = 1
         self.client = openAIClient
+        self.isEnabled = True
+
+    def enable(self):
+        self.isEnabled = True
+
+    def disable(self):
+        self.isEnabled = False
 
     def list_microphones(self):
         mics = sr.Microphone.list_microphone_names()
@@ -28,6 +35,8 @@ class Voice:
 
 
     def tts(self, string):
+        if not self.isEnabled:
+            return
         response = self.client.audio.speech.create(
             model="tts-1",
             voice="echo",

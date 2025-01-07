@@ -42,7 +42,7 @@ class Jarvis:
         self.pc.copy(code)
         self.voice.tts(explanation)
 
-    def mainLoop(self, inputTxt=None):
+    def mainLoop(self, inputTxt=None, webApp=False):
         #get mic audio
         #send mic audio to gpt
         #handle response
@@ -55,8 +55,12 @@ class Jarvis:
             recogText = inputTxt
         print("Asking GPT")
         self.voice.tts("Hang on I'm thinking...")
+        if webApp:
+            print("Disabling tts")
+            self.voice.disable()
         response = self.gpt.askGPT(recogText)
         print("Handling Response")
+        response = response.strip(CODE_SEG_KEYSTRING)
         if IMG_REQ_KEYSTRING.lower() in response.lower():
             self.handleImageRequirement()
         elif response.lower() == SCREEN_REQ_KEYSTRING.lower():
@@ -68,14 +72,16 @@ class Jarvis:
             return False
         else:
             self.voice.tts(response)
+        self.voice.enable()
         self.reqCounter+=1
         print(f"Done with request {self.reqCounter}!")
-        return response
+        return self.gpt.messages[6:]
 
 if __name__=="__main__":
     
     isSilent = input("Would you like to run without Speech Recog? (y/n)\t").lower() == "y"
     isListening = input("Would you like to run without a hardware trigger? (y/n)\t").lower() == "y"
+    webInput = False
     if isListening and isSilent:
         webInput = (isListening and isSilent) and input("Would you like to use the website-based input (y/n)\t").lower() == "y"
 

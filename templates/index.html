@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flask Web App</title>
+    <title>Jarvis WebApp</title>
     <style>
         .chat-container {
             display: flex;
@@ -35,35 +35,25 @@
 </head>
 <body>
     <h1>Simple Flask App</h1>
+    <div class="chat-container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="bubble {{ 'user-bubble' if message.role == 'user' else 'response-bubble' }}">
+                    <div class="markdown-content" data-content="{{ message.content | e }}"></div>
+                </div>
+            {% endfor %}
+        {% endif %}
     <form method="POST">
         <label for="user_input">Enter something:</label>
         <input type="text" id="user_input" name="user_input">
         <button type="submit">Submit</button>
     </form>
-    <div class="chat-container">
-        {% if user_input %}
-            <div class="bubble user-bubble">
-                <div id="userMarkdown">{{ user_input }}</div>
-            </div>
-        {% endif %}
-        {% if response %}
-            <div class="bubble response-bubble">
-                <div id="responseMarkdown">{{ response }}</div>
-            </div>
-        {% endif %}
     </div>
     <script>
-        // Render the user input as Markdown
-        const userMarkdownEl = document.getElementById('userMarkdown');
-        if (userMarkdownEl) {
-            userMarkdownEl.innerHTML = marked.parse(userMarkdownEl.innerText);
-        }
-
-        // Render the response as Markdown
-        const responseMarkdownEl = document.getElementById('responseMarkdown');
-        if (responseMarkdownEl) {
-            responseMarkdownEl.innerHTML = marked.parse(responseMarkdownEl.innerText);
-        }
+        // Render all markdown content dynamically
+        document.querySelectorAll('.markdown-content').forEach((el) => {
+            el.innerHTML = marked.parse(el.dataset.content);
+        });
     </script>
 </body>
 </html>

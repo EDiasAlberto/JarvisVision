@@ -14,10 +14,10 @@ class WebApp:
             if request.method == "POST":
                 user_input = request.form.get("user_input")
                 if self.assistant:
-                    response = self.assistant.mainLoop(user_input)
+                    response = self.assistant.mainLoop(inputTxt=user_input, webApp=True)
 
                 print("Received input:", user_input)
-            return render_template("index.html", user_input=user_input, response=response)
+            return render_template("index.html", messages=response)
 
     def run(self, host="0.0.0.0", port=4200):
         self.app.run(host=host, port=port, debug=True)
