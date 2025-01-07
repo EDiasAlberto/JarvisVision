@@ -10,10 +10,11 @@ An OpenAI API wrapper that allows for some interaction with local hardware (such
 + Copying suggested code segments to clipboard 
 + Microphone input for command
 + Speaker output for Text-To-Speech
++ Website-based interaction method
++ Optional button to trigger speech recognition
++ Screenshotting user display when relevant
 
 ## TO DO 
 
 + Access clipboard to fetch code if user needs help with something specific
-+ Access local screen capture to maybe provide user context specific aid
-+ Implement button based interaction rather than running a script each time 
 + Implement some form of persistence for memory and setup across reboots
