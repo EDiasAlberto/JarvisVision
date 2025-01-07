@@ -54,16 +54,16 @@ class Jarvis:
         else:
             recogText = inputTxt
         print("Asking GPT")
-        self.voice.tts("Hang on I'm thinking...")
         if webApp:
             print("Disabling tts")
             self.voice.disable()
+        self.voice.tts("Hang on I'm thinking...")
         response = self.gpt.askGPT(recogText)
         print("Handling Response")
-        response = response.strip(CODE_SEG_KEYSTRING)
         if IMG_REQ_KEYSTRING.lower() in response.lower():
             self.handleImageRequirement()
         elif response.lower() == SCREEN_REQ_KEYSTRING.lower():
+            print("SCREENSHOT MEME MOMENT")
             self.handleScreenRequirement()
         elif CODE_SEG_KEYSTRING.lower() in response.lower():
             self.handleCodeSegment(response)

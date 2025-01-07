@@ -25,7 +25,7 @@ class GPT:
         self.maxTokens = 2000
 
     def createMessage(self, content, role="user"):
-        newMsg = {"role": role, "content": content}
+        newMsg = {"role": role, "type": "plaintext", "content": content}
         self.messages.append(newMsg)
 
     def sendMessageHistory(self):
@@ -36,7 +36,7 @@ class GPT:
         gptResponse = response.choices[0].message.content
         print(f"Response: {gptResponse}")
 
-        self.messages.append({"role": "assistant", "content": gptResponse})
+        self.messages.append({"role": "assistant", "type": "plaintext", "content": gptResponse})
         return gptResponse
 
     def askGPT(self, message):
@@ -45,7 +45,7 @@ class GPT:
         return response
 
     def sendImg(self, imgData):
-        imgMsg = {"role": "user", "content": [
+        imgMsg = {"role": "user", "type": "complex", "content": [
             {
                 "type": "text",
                 "text": "Here is the associated image for the previous request",
